@@ -203,17 +203,26 @@ int RandomizedSelect(int A[], int p, int r, int i)
 }
 
 
+
+
+//Lab_3
 void CountingSort(int* A, int n, int first, int last)
 {
     int max = MaxItem(A, first, last);
     int min = MinItem(A, first, last);
     int* C = new int[max - min + 1];
+
+    //Заповнюємо масив нулями 
     for (int i = 0; i < max - min + 1; i++)
         C[i] = 0;
+
+
     for (int i = first; i < last; i++)
         C[A[i] - min]++;
+
     for (int i = 1; i < max - min + 1; i++)
         C[i] += C[i - 1];
+
     int* B = new int[last - first + 1];
     for (int i = last - 1; i >= first; i--)
     {
@@ -221,7 +230,9 @@ void CountingSort(int* A, int n, int first, int last)
         C[A[i] - min]--;
     }
     for (int i = first; i < last; i++)
-        A[i] = B[i - first];
+
+
+    A[i] = B[i - first];
     delete[] B;
     delete[] C;
 }
