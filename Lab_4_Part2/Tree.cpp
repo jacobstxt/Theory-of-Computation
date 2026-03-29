@@ -4,8 +4,6 @@
 
 using namespace std;
 
-// --- ЧАСТИНА 1 ---
-
 
 
 void ShowTree(Node* root, int level) {
@@ -17,9 +15,7 @@ void ShowTree(Node* root, int level) {
     }
 }
 
-// --- ЧАСТИНА 2 (BST) ---
 
-// Створення кореневого вузла
 Node* CreateRootBST(datatype key) {
     Node* root = new Node;
     root->key = key;
@@ -28,6 +24,7 @@ Node* CreateRootBST(datatype key) {
     root->right = nullptr;
     return root;
 }
+
 
 Node* SearchNodeBST(Node* root, datatype key) {
     if (root == nullptr || key == root->key)
