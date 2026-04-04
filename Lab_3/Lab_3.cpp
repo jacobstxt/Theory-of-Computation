@@ -2,6 +2,12 @@
 #include "Sort.h"
 #include <windows.h>
 
+
+void copyArray(int src[], int dest[], int n) {
+	for (int i = 0; i < n; i++)
+		dest[i] = src[i];
+}
+
 int main()
 {
     SetConsoleCP(1251);
@@ -18,6 +24,7 @@ int main()
 	}
 
 	int* A = new int[n];
+	int* backup = new int[n];
 
 	std::cout << "Введіть елементи :" << std::endl;
 	for (int i = 0; i < n; i++) {
@@ -29,12 +36,37 @@ int main()
 		}
 	}
 
+
+	copyArray(A, backup, n);
+
+
+
 	std::cout << "Масив перед сортуванням:" << std::endl;
 	show(A, n);
 
 	std::cout << "Масив після сортування:" << std::endl;
-	//
-	CountingSort(A, n, 0, n);
-	//
+	RadixSort(A, n, true, true);
 	show(A, n);
+
+
+	copyArray(backup, A, n);
+
+
+	RadixSort(A, n, true, false);
+	std::cout << "\n3.1 Результат (обернений останній цикл):" << std::endl;
+	show(A, n);
+	
+
+	copyArray(backup, A, n);
+
+
+	RadixSort(A, n, false, true);
+
+	std::cout << "\n3.2 Результат (розряди від старшого до молодшого):" << std::endl;
+	show(A, n);
+	
+
+
+	delete[] A;
+	delete[] backup;
 }

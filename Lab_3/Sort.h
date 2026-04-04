@@ -27,3 +27,5 @@ int RandomizedSelect(int A[], int p, int r, int i);
 
 //Methods Lab_3
 void CountingSort(int* A, int n, int first, int last);
+void CountingSortByDigit(int arr[], int n, int digitPlace, bool lastLoopAsc = true);
+void RadixSort(int arr[], int n, bool digitsAsc = true, bool lastLoopAsc = true);
