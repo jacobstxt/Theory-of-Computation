@@ -6,7 +6,7 @@
 void copyArray(int src[], int dest[], int n) {
 	for (int i = 0; i < n; i++)
 		dest[i] = src[i];
-}
+} 
 
 int main()
 {

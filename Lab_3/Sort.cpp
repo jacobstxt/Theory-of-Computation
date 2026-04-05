@@ -212,7 +212,6 @@ void CountingSort(int* A, int n, int first, int last)
     int min = MinItem(A, first, last);
     int* C = new int[max - min + 1];
 
-    //Заповнюємо масив нулями 
     for (int i = 0; i < max - min + 1; i++)
         C[i] = 0;
 
@@ -242,21 +241,18 @@ void CountingSortByDigit(int arr[], int n, int digitPlace, bool lastLoopAsc) {
     int* output = new int[n];
     int count[10] = { 0 };
 
-    // Підрахунок кількості кожної цифри
     for (int i = 0; i < n; i++) {
         int digit = (arr[i] / digitPlace) % 10;
         count[digit]++;
     }
 
-    // Префіксні суми — визначаємо позиції
+
     for (int i = 1; i < 10; i++) {
         count[i] += count[i - 1];
     }
 
-    // Розміщення елементів у вихідний масив
-    // Нормальний порядок: від n-1 до 0 (забезпечує стабільність)
+
     if (lastLoopAsc) {
-        // Стандартний варіант — обхід справа наліво (стабільне сортування)
         for (int i = n - 1; i >= 0; i--) {
             int digit = (arr[i] / digitPlace) % 10;
             output[count[digit] - 1] = arr[i];
@@ -264,7 +260,6 @@ void CountingSortByDigit(int arr[], int n, int digitPlace, bool lastLoopAsc) {
         }
     }
     else {
-        // Завдання 3.1 — обхід зліва направо (порушує стабільність!)
         for (int i = 0; i < n; i++) {
             int digit = (arr[i] / digitPlace) % 10;
             output[count[digit] - 1] = arr[i];
@@ -272,7 +267,7 @@ void CountingSortByDigit(int arr[], int n, int digitPlace, bool lastLoopAsc) {
         }
     }
 
-    // Копіювання результату назад
+
     for (int i = 0; i < n; i++) {
         arr[i] = output[i];
     }
@@ -285,7 +280,6 @@ void CountingSortByDigit(int arr[], int n, int digitPlace, bool lastLoopAsc) {
 void RadixSort(int arr[], int n, bool digitsAsc, bool lastLoopAsc) {
     int mx = MaxItem(arr, 0,n);
 
-    // Визначаємо кількість розрядів
     int numDigits = 0;
     int temp = mx;
     while (temp > 0) {
@@ -294,14 +288,13 @@ void RadixSort(int arr[], int n, bool digitsAsc, bool lastLoopAsc) {
     }
     if (numDigits == 0) numDigits = 1;
 
+	//тут буде 1, 10, 100, ... або 100, 10, 1 залежно від digitsAsc
     if (digitsAsc) {
-        // Стандартний порядок: від молодшого розряду до старшого (LSD)
         for (int digitPlace = 1; digitPlace <= mx; digitPlace *= 10) {
             CountingSortByDigit(arr, n, digitPlace, lastLoopAsc);
         }
     }
     else {
-        // Завдання 3.2 — від старшого розряду до молодшого
         int maxPlace = (int)pow(10, numDigits - 1);
         for (int digitPlace = maxPlace; digitPlace >= 1; digitPlace /= 10) {
             CountingSortByDigit(arr, n, digitPlace, lastLoopAsc);
