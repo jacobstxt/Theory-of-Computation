@@ -43,3 +43,9 @@ cmake-build-*/
 Thumbs.db
 *.log
 *.tmp
+
+
+
+*.zip
+*.pdf
+*.docx
