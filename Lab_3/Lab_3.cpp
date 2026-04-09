@@ -36,23 +36,21 @@ int main()
 		}
 	}
 
-
 	copyArray(A, backup, n);
-
 
 
 	std::cout << "Масив перед сортуванням:" << std::endl;
 	show(A, n);
 
 	std::cout << "Масив після сортування:" << std::endl;
-	RadixSort(A, n, true, true);
+	RadixSort(A, n, true, 10,true);
 	show(A, n);
 
 
 	copyArray(backup, A, n);
 
 
-	RadixSort(A, n, true, false);
+	RadixSort(A, n, true,10, false);
 	std::cout << "\n3.1 Результат (обернений останній цикл):" << std::endl;
 	show(A, n);
 	
@@ -60,13 +58,11 @@ int main()
 	copyArray(backup, A, n);
 
 
-	RadixSort(A, n, false, true);
+	RadixSort(A, n, false,10, true);
 
 	std::cout << "\n3.2 Результат (розряди від старшого до молодшого):" << std::endl;
 	show(A, n);
 	
-
-
 	delete[] A;
 	delete[] backup;
 }

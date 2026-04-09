@@ -237,31 +237,37 @@ void CountingSort(int* A, int n, int first, int last)
 }
 
 
-void CountingSortByDigit(int arr[], int n, int digitPlace, bool lastLoopAsc) {
+void CountingSortByDigit(int arr[], int n, int digitPlace, int base, bool lastLoopAsc) {
     int* output = new int[n];
-    int count[10] = { 0 };
+    // base
+    int* count = new int[base];
+
+
+    for (int i = 0; i < base; i++)
+        count[i] = 0;
 
     for (int i = 0; i < n; i++) {
-        int digit = (arr[i] / digitPlace) % 10;
+        //тут base замість 10
+        int digit = (arr[i] / digitPlace) % base;
         count[digit]++;
     }
 
 
-    for (int i = 1; i < 10; i++) {
+    for (int i = 1; i < base; i++) {
         count[i] += count[i - 1];
     }
 
 
     if (lastLoopAsc) {
         for (int i = n - 1; i >= 0; i--) {
-            int digit = (arr[i] / digitPlace) % 10;
+            int digit = (arr[i] / digitPlace) % base;
             output[count[digit] - 1] = arr[i];
             count[digit]--;
         }
     }
     else {
         for (int i = 0; i < n; i++) {
-            int digit = (arr[i] / digitPlace) % 10;
+            int digit = (arr[i] / digitPlace) % base;
             output[count[digit] - 1] = arr[i];
             count[digit]--;
         }
@@ -273,31 +279,35 @@ void CountingSortByDigit(int arr[], int n, int digitPlace, bool lastLoopAsc) {
     }
 
     delete[] output;
+    delete[] count; 
 }
 
 
 
-void RadixSort(int arr[], int n, bool digitsAsc, bool lastLoopAsc) {
+void RadixSort(int arr[], int n, bool digitsAsc, int base, bool lastLoopAsc) {
     int mx = MaxItem(arr, 0,n);
 
     int numDigits = 0;
     int temp = mx;
     while (temp > 0) {
         numDigits++;
-        temp /= 10;
+        //тут
+        temp /= base;
     }
     if (numDigits == 0) numDigits = 1;
 
-	//тут буде 1, 10, 100, ... або 100, 10, 1 залежно від digitsAsc
+
     if (digitsAsc) {
-        for (int digitPlace = 1; digitPlace <= mx; digitPlace *= 10) {
-            CountingSortByDigit(arr, n, digitPlace, lastLoopAsc);
+        //тут множу на 10
+        for (int digitPlace = 1; digitPlace <= mx; digitPlace *= base) {
+            CountingSortByDigit(arr, n, digitPlace,base, lastLoopAsc);
         }
     }
     else {
-        int maxPlace = (int)pow(10, numDigits - 1);
-        for (int digitPlace = maxPlace; digitPlace >= 1; digitPlace /= 10) {
-            CountingSortByDigit(arr, n, digitPlace, lastLoopAsc);
+        int maxPlace = (int)pow(base, numDigits - 1);
+        //тут підношу до base
+        for (int digitPlace = maxPlace; digitPlace >= 1; digitPlace /= base) {
+            CountingSortByDigit(arr, n, digitPlace,base, lastLoopAsc);
         }
     }
 }
