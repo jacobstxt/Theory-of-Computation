@@ -3,11 +3,9 @@
 #include <algorithm>
 
 
-
 int Parent(int i) { return (i - 1) / 2; }
 int Left(int i) { return 2 * i + 1; }
 int Right(int i) { return 2 * i + 2; }
-
 
 
 void MaxHeapify(int* A, int heapSize, int i) {
@@ -30,7 +28,6 @@ void BuildMaxHeap(int* A, int n) {
     for (int i = n / 2 - 1; i >= 0; --i)
         MaxHeapify(A, n, i);
 }
-
 
 
 void MinHeapify(int* A, int heapSize, int i) {
