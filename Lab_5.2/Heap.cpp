@@ -9,134 +9,131 @@ int Parent(int i) { return (i - 1) / 2; }
 int Left(int i) { return 2 * i + 1; }
 int Right(int i) { return 2 * i + 2; }
 
-void MaxHeapify(int* A, int heapSize, int i) {
-    int l = Left(i);
-    int r = Right(i);
-    int largest = i;
+void MaxHeapify(int* A, int* P, int heapSize, int i) {
+    int l = Left(i), r = Right(i), largest = i;
 
-    if (l < heapSize && A[l] > A[largest])
-        largest = l;
-    if (r < heapSize && A[r] > A[largest])
-        largest = r;
+    if (l < heapSize && P[l] > P[largest]) largest = l;
+    if (r < heapSize && P[r] > P[largest]) largest = r;
 
     if (largest != i) {
         std::swap(A[i], A[largest]);
-        MaxHeapify(A, heapSize, largest);
+        std::swap(P[i], P[largest]); 
+        MaxHeapify(A, P, heapSize, largest);
     }
 }
 
-void BuildMaxHeap(int* A, int n) {
+void BuildMaxHeap(int* A, int* P, int n) {
     for (int i = n / 2 - 1; i >= 0; --i)
-        MaxHeapify(A, n, i);
+        MaxHeapify(A, P, n, i);
 }
 
-int HeapMax(const int* A, int heapSize) {
+int HeapExtractMax(int* A, int* P, int& heapSize) {
     if (heapSize <= 0)
-        throw std::underflow_error("–ü–æ–º–∏–ª–∫–∞: —á–µ—Ä–≥–∞ –∑ –ø—Ä—ñ–æ—Ä–∏—Ç–µ—Ç–∞–º–∏ –ø–æ—Ä–æ–∂–Ω—è.");
-    return A[0];
-}
-
-int HeapExtractMax(int* A, int& heapSize) {
-    if (heapSize <= 0)
-        throw std::underflow_error("–ü–æ–º–∏–ª–∫–∞: —á–µ—Ä–≥–∞ –∑ –ø—Ä—ñ–æ—Ä–∏—Ç–µ—Ç–∞–º–∏ –ø–æ—Ä–æ–∂–Ω—è.");
-
+        throw std::underflow_error("œÓÏËÎÍ‡: ˜Â„‡ ÔÓÓÊÌˇ.");
     int maxVal = A[0];
     A[0] = A[heapSize - 1];
+    P[0] = P[heapSize - 1]; 
     --heapSize;
-    MaxHeapify(A, heapSize, 0);
+    MaxHeapify(A, P, heapSize, 0);
     return maxVal;
 }
 
-void HeapIncreaseKey(int* A, int heapSize, int i, int key) {
+void HeapIncreaseKey(int* A, int* P, int heapSize, int i, int key) {
     if (i < 0 || i >= heapSize)
-        throw std::out_of_range("–ü–æ–º–∏–ª–∫–∞: —ñ–Ω–¥–µ–∫—Å –≤–∏—Ö–æ–¥–∏—Ç—å –∑–∞ –º–µ–∂—ñ –∫—É–ø–∏.");
-    if (key < A[i])
-        throw std::invalid_argument(
-            "–ü–æ–º–∏–ª–∫–∞: –Ω–æ–≤–∏–π –∫–ª—é—á –º–µ–Ω—à–∏–π –∑–∞ –ø–æ—Ç–æ—á–Ω–∏–π (–∑–º–µ–Ω—à–µ–Ω–Ω—è –∫–ª—é—á–∞ –Ω–µ –¥–æ–ø—É—Å–∫–∞—î—Ç—å—Å—è).");
-
-    A[i] = key;
-    while (i > 0 && A[Parent(i)] < A[i]) {
+        throw std::out_of_range("œÓÏËÎÍ‡: ≥Ì‰ÂÍÒ ‚ËıÓ‰ËÚ¸ Á‡ ÏÂÊ≥.");
+    if (key < P[i])
+        throw std::invalid_argument("œÓÏËÎÍ‡: ÌÓ‚ËÈ ÍÎ˛˜ ÏÂÌ¯ËÈ Á‡ ÔÓÚÓ˜ÌËÈ.");
+    P[i] = key;
+    while (i > 0 && P[Parent(i)] < P[i]) {
         std::swap(A[i], A[Parent(i)]);
+        std::swap(P[i], P[Parent(i)]);  
         i = Parent(i);
     }
 }
 
-void MaxHeapInsert(int* A, int& heapSize, int key) {
-    A[heapSize] = INT_MIN; 
+void MaxHeapInsert(int* A, int* P, int& heapSize, int val, int key) {
+    A[heapSize] = val;
+    P[heapSize] = INT_MIN;
     ++heapSize;
-    HeapIncreaseKey(A, heapSize, heapSize - 1, key);
+    HeapIncreaseKey(A, P, heapSize, heapSize - 1, key);
 }
 
 
-void MinHeapify(int* A, int heapSize, int i) {
-    int l = Left(i);
-    int r = Right(i);
-    int smallest = i;
+int HeapMax(const int* P, int heapSize) {
+    if (heapSize <= 0)
+        throw std::underflow_error("œÓÏËÎÍ‡: ˜Â„‡ ÔÓÓÊÌˇ.");
+    return P[0];
+}
 
-    if (l < heapSize && A[l] < A[smallest])
-        smallest = l;
-    if (r < heapSize && A[r] < A[smallest])
-        smallest = r;
+int HeapMin(const int* P, int heapSize) {
+    if (heapSize <= 0)
+        throw std::underflow_error("œÓÏËÎÍ‡: ˜Â„‡ ÔÓÓÊÌˇ.");
+    return P[0];
+}
+
+
+void MinHeapify(int* A, int* P, int heapSize, int i) {
+    int l = Left(i), r = Right(i), smallest = i;
+
+    if (l < heapSize && P[l] < P[smallest]) smallest = l;
+    if (r < heapSize && P[r] < P[smallest]) smallest = r;
 
     if (smallest != i) {
         std::swap(A[i], A[smallest]);
-        MinHeapify(A, heapSize, smallest);
+        std::swap(P[i], P[smallest]);
+        MinHeapify(A, P, heapSize, smallest);
     }
 }
 
-void BuildMinHeap(int* A, int n) {
+void BuildMinHeap(int* A, int* P, int n) {
     for (int i = n / 2 - 1; i >= 0; --i)
-        MinHeapify(A, n, i);
+        MinHeapify(A, P, n, i);
 }
 
-int HeapMin(const int* A, int heapSize) {
+int HeapExtractMin(int* A, int* P, int& heapSize) {
     if (heapSize <= 0)
-        throw std::underflow_error("–ü–æ–º–∏–ª–∫–∞: —á–µ—Ä–≥–∞ –∑ –ø—Ä—ñ–æ—Ä–∏—Ç–µ—Ç–∞–º–∏ –ø–æ—Ä–æ–∂–Ω—è.");
-    return A[0];
-}
-
-int HeapExtractMin(int* A, int& heapSize) {
-    if (heapSize <= 0)
-        throw std::underflow_error("–ü–æ–º–∏–ª–∫–∞: —á–µ—Ä–≥–∞ –∑ –ø—Ä—ñ–æ—Ä–∏—Ç–µ—Ç–∞–º–∏ –ø–æ—Ä–æ–∂–Ω—è.");
-
+        throw std::underflow_error("œÓÏËÎÍ‡: ˜Â„‡ ÔÓÓÊÌˇ.");
     int minVal = A[0];
     A[0] = A[heapSize - 1];
+    P[0] = P[heapSize - 1];
     --heapSize;
-    MinHeapify(A, heapSize, 0);
+    MinHeapify(A, P, heapSize, 0);
     return minVal;
 }
 
-void HeapDecreaseKey(int* A, int heapSize, int i, int key) {
+void HeapDecreaseKey(int* A, int* P, int heapSize, int i, int key) {
     if (i < 0 || i >= heapSize)
-        throw std::out_of_range("–ü–æ–º–∏–ª–∫–∞: —ñ–Ω–¥–µ–∫—Å –≤–∏—Ö–æ–¥–∏—Ç—å –∑–∞ –º–µ–∂—ñ –∫—É–ø–∏.");
-    if (key > A[i])
-        throw std::invalid_argument(
-            "–ü–æ–º–∏–ª–∫–∞: –Ω–æ–≤–∏–π –∫–ª—é—á –±—ñ–ª—å—à–∏–π –∑–∞ –ø–æ—Ç–æ—á–Ω–∏–π (–∑–±—ñ–ª—å—à–µ–Ω–Ω—è –∫–ª—é—á–∞ –Ω–µ –¥–æ–ø—É—Å–∫–∞—î—Ç—å—Å—è).");
-
-    A[i] = key;
-    while (i > 0 && A[Parent(i)] > A[i]) {
+        throw std::out_of_range("œÓÏËÎÍ‡: ≥Ì‰ÂÍÒ ‚ËıÓ‰ËÚ¸ Á‡ ÏÂÊ≥.");
+    if (key > P[i])
+        throw std::invalid_argument("œÓÏËÎÍ‡: ÌÓ‚ËÈ ÍÎ˛˜ ·≥Î¸¯ËÈ Á‡ ÔÓÚÓ˜ÌËÈ.");
+    P[i] = key;
+    while (i > 0 && P[Parent(i)] > P[i]) {
         std::swap(A[i], A[Parent(i)]);
+        std::swap(P[i], P[Parent(i)]);
         i = Parent(i);
     }
 }
 
-void MinHeapInsert(int* A, int& heapSize, int key) {
-    A[heapSize] = INT_MAX;  
+void MinHeapInsert(int* A, int* P, int& heapSize, int val, int key) {
+    A[heapSize] = val;
+    P[heapSize] = INT_MAX;
     ++heapSize;
-    HeapDecreaseKey(A, heapSize, heapSize - 1, key);
+    HeapDecreaseKey(A, P, heapSize, heapSize - 1, key);
 }
 
 
-void show(int* A, int n) {
-    std::cout << "[ ";
-    for (int i = 0; i < n; ++i)
-        std::cout << A[i] << " ";
+void show(const int* A, const int* P, int n) {
+    std::cout << "«Ì‡˜ÂÌÌˇ:  [ ";
+    for (int i = 0; i < n; ++i) std::cout << A[i] << " ";
+    std::cout << "]\n";
+    std::cout << "œ≥ÓËÚÂÚ:   [ ";
+    for (int i = 0; i < n; ++i) std::cout << P[i] << " ";
     std::cout << "]\n";
 }
 
-void PrintHeapTree(const int* A, int heapSize) {
+void PrintHeapTree(const int* A, const int* P, int heapSize) {
     if (heapSize == 0) {
-        std::cout << "(–ø–æ—Ä–æ–∂–Ω—è)\n";
+        std::cout << "(ÔÓÓÊÌˇ)\n";
         return;
     }
 
@@ -151,7 +148,7 @@ void PrintHeapTree(const int* A, int heapSize) {
         for (int s = 0; s < indent * 3; ++s) std::cout << ' ';
 
         for (int j = 0; j < count && idx < heapSize; ++j, ++idx) {
-            std::cout << std::setw(3) << A[idx];
+            std::cout << "[" << A[idx] << "|p" << P[idx] << "]";
             if (j < count - 1 && idx + 1 < heapSize)
                 for (int s = 0; s < spacing * 3; ++s) std::cout << ' ';
         }

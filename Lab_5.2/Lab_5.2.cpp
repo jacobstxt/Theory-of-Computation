@@ -8,28 +8,25 @@ using namespace std;
 const int MAX_SIZE = 100;
 
 int arr[MAX_SIZE];
+int prior[MAX_SIZE];
 int heapSize = 0;
 bool heapBuilt = false;
 bool isMaxHeap = false;
-
 
 void inputArray() {
     int n;
     cout << "Введiть кiлькiсть елементiв: ";
     cin >> n;
-    if (n <= 0 || n > MAX_SIZE) {
-        cout << "Невiрна кiлькiсть елементiв!\n";
-        return;
-    }
+    if (n <= 0 || n > MAX_SIZE) { cout << "Невiрна кiлькiсть!\n"; return; }
     heapSize = n;
     heapBuilt = false;
-    cout << "Введiть елементи:\n";
+    cout << "Введiть елементи (значення i пріоритет):\n";
     for (int i = 0; i < heapSize; ++i) {
-        cout << "  A[" << i << "] = ";
-        cin >> arr[i];
+        cout << "  [" << i << "] значення   = "; cin >> arr[i];
+        cout << "  [" << i << "] пріоритет  = "; cin >> prior[i];
     }
-    cout << "Масив введено: ";
-    show(arr, heapSize);
+    cout << "Масив введено:\n";
+    show(arr, prior, heapSize);
 }
 
 void showMenu() {
@@ -67,105 +64,97 @@ int main() {
 
         case 2:
             if (heapSize == 0) { cout << "Спочатку введiть масив!\n"; break; }
-            BuildMaxHeap(arr, heapSize);
+            BuildMaxHeap(arr, prior, heapSize);
             isMaxHeap = true;
             heapBuilt = true;
-            cout << "Max-Heap побудовано: ";
-            show(arr, heapSize);
+            cout << "Max-Heap побудовано:\n";
+            show(arr, prior, heapSize);
             break;
 
         case 3:
             if (heapSize == 0) { cout << "Спочатку введiть масив!\n"; break; }
-            BuildMinHeap(arr, heapSize);
+            BuildMinHeap(arr, prior, heapSize);
             isMaxHeap = false;
             heapBuilt = true;
-            cout << "Min-Heap побудовано: ";
-            show(arr, heapSize);
+            cout << "Min-Heap побудовано:\n";
+            show(arr, prior, heapSize);
             break;
 
         case 4:
             if (!heapBuilt) { cout << "Спочатку побудуйте купу!\n"; break; }
             try {
                 if (isMaxHeap)
-                    cout << "Максимум: " << HeapMax(arr, heapSize) << "\n";
+                    cout << "Максимальний пріоритет: " << HeapMax(prior, heapSize)
+                    << ", значення: " << arr[0] << "\n";
                 else
-                    cout << "Мiнiмум: " << HeapMin(arr, heapSize) << "\n";
+                    cout << "Мiнiмальний пріоритет: " << HeapMin(prior, heapSize)
+                    << ", значення: " << arr[0] << "\n";
             }
-            catch (const exception& e) {
-                cout << e.what() << "\n";
-            }
+            catch (const exception& e) { cout << e.what() << "\n"; }
             break;
 
         case 5:
             if (!heapBuilt) { cout << "Спочатку побудуйте купу!\n"; break; }
             try {
                 if (isMaxHeap) {
-                    int val = HeapExtractMax(arr, heapSize);
-                    cout << "Витягнуто максимум: " << val << "\n";
+                    int val = HeapExtractMax(arr, prior, heapSize);
+                    cout << "Витягнуто елемент зі значенням: " << val << "\n";
                 }
                 else {
-                    int val = HeapExtractMin(arr, heapSize);
-                    cout << "Витягнуто мiнiмум: " << val << "\n";
+                    int val = HeapExtractMin(arr, prior, heapSize);
+                    cout << "Витягнуто елемент зi значенням: " << val << "\n";
                 }
-                cout << "Купа пiсля витягнення: ";
-                show(arr, heapSize);
+                cout << "Купа пiсля витягнення:\n";
+                show(arr, prior, heapSize);
             }
-            catch (const exception& e) {
-                cout << e.what() << "\n";
-            }
+            catch (const exception& e) { cout << e.what() << "\n"; }
             break;
 
         case 6: {
             if (!heapBuilt) { cout << "Спочатку побудуйте купу!\n"; break; }
             int idx, key;
-            cout << "Введiть iндекс (0.." << heapSize - 1 << "): ";
-            cin >> idx;
-            cout << "Введiть новий ключ: ";
-            cin >> key;
+            cout << "Введiть iндекс (0.." << heapSize - 1 << "): "; cin >> idx;
+            cout << "Введiть новий пріоритет: "; cin >> key;
             try {
                 if (isMaxHeap)
-                    HeapIncreaseKey(arr, heapSize, idx, key);
+                    HeapIncreaseKey(arr, prior, heapSize, idx, key);
                 else
-                    HeapDecreaseKey(arr, heapSize, idx, key);
-                cout << "Купа пiсля змiни ключа: ";
-                show(arr, heapSize);
+                    HeapDecreaseKey(arr, prior, heapSize, idx, key);
+                cout << "Купа пiсля змiни пріоритету:\n";
+                show(arr, prior, heapSize);
             }
-            catch (const exception& e) {
-                cout << e.what() << "\n";
-            }
+            catch (const exception& e) { cout << e.what() << "\n"; }
             break;
         }
 
         case 7: {
             if (!heapBuilt) { cout << "Спочатку побудуйте купу!\n"; break; }
             if (heapSize >= MAX_SIZE) { cout << "Купа заповнена!\n"; break; }
-            int key;
-            cout << "Введiть значення для вставки: ";
-            cin >> key;
+            int val, key;
+            cout << "Введiть значення: ";  cin >> val;
+            cout << "Введiть пріоритет: "; cin >> key;
             try {
                 if (isMaxHeap)
-                    MaxHeapInsert(arr, heapSize, key);
+                    MaxHeapInsert(arr, prior, heapSize, val, key);
                 else
-                    MinHeapInsert(arr, heapSize, key);
-                cout << "Купа пiсля вставки: ";
-                show(arr, heapSize);
+                    MinHeapInsert(arr, prior, heapSize, val, key);
+                cout << "Купа пiсля вставки:\n";
+                show(arr, prior, heapSize);
             }
-            catch (const exception& e) {
-                cout << e.what() << "\n";
-            }
+            catch (const exception& e) { cout << e.what() << "\n"; }
             break;
         }
 
         case 8:
             if (heapSize == 0) { cout << "Масив порожнiй!\n"; break; }
-            cout << "Поточний масив: ";
-            show(arr, heapSize);
+            cout << "Поточний масив:\n";
+            show(arr, prior, heapSize);
             break;
 
         case 9:
             if (heapSize == 0) { cout << "Купа порожня!\n"; break; }
             cout << "Дерево купи:\n";
-            PrintHeapTree(arr, heapSize);
+            PrintHeapTree(arr, prior, heapSize);
             break;
 
         case 0:
