@@ -1,34 +1,34 @@
 #include "DSU.h"
 
 DSU::DSU(int n) {
-    parent.resize(n);
-    rank_.resize(n, 0);
+	parent.resize(n); // ініціалізую вектор батьків розміром n
+    rank_.resize(n, 0); // ініціалізую вектор рангів розміром n, всі значення 0
     for (int i = 0; i < n; i++)
-        set_make(i);
+        set_make(i); 
 }
 
 void DSU::set_make(int v) {
-    parent[v] = v;
-    rank_[v] = 0;
+	parent[v] = v; // вершина вказує на себе покищо , кожна вершина є ізольованою групою
+	rank_[v] = 0; // ранг (глибина дерева) ініціалізується нулем
 }
 
 
-int DSU::set_find(int v) {
-    if (parent[v] != v)
-        parent[v] = set_find(parent[v]); 
-    return parent[v];
+int DSU::set_find(int v) { 
+	if (parent[v] != v)  // якщо вершина не є коренем, то виконуємо пошук кореня
+		parent[v] = set_find(parent[v]);  // рекурсивно шукаємо корінь і виконуємо компресію шляху, щоб прискорити майбутні пошуки
+    return parent[v]; 
 }
 
 
 void DSU::set_union(int v1, int v2) {
-    int r1 = set_find(v1);
-    int r2 = set_find(v2);
-    if (r1 == r2) return; 
+	int r1 = set_find(v1); // знаходимо корені обох вершин
+	int r2 = set_find(v2); 
+    if (r1 == r2) return; // якщо вони вже в одній групі, то об'єднувати нічого не потрібно
 
     if (rank_[r1] < rank_[r2])
-        std::swap(r1, r2);
+		std::swap(r1, r2); // завжди приєднуємо дерево з меншим рангом до дерева з більшим рангом, щоб зберегти баланс
 
-    parent[r2] = r1;
-    if (rank_[r1] == rank_[r2])
+	parent[r2] = r1; // беремо корінь r2 і приєднуємо його до кореня r1
+	if (rank_[r1] == rank_[r2]) // якщо обидва дерева мають однаковий ранг, то після приєднання ранг нового кореня збільшується на 1
         rank_[r1]++;
 }

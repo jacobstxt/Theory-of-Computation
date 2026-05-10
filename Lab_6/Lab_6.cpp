@@ -10,7 +10,7 @@ struct Edge {
     int u, v, weight;
 };
 
-void sort(vector<Edge>& edges) {
+void sort(vector<Edge>& edges) { // сортування ребер за вагою
     int n = (int)edges.size();
     for (int i = 1; i < n; i++) {
         Edge key = edges[i];
@@ -24,28 +24,30 @@ void sort(vector<Edge>& edges) {
 }
 
 vector<Edge> kruskal(int n, vector<Edge>& edges) {
-    sort(edges); // сортуємо ребра за вагою
+    sort(edges); // сортує ребра за вагою
 
-    DSU dsu(n);
-    vector<Edge> mst;
+	DSU dsu(n); // створюємо DSU для n вершин
+	vector<Edge> mst; // вектор для зберігання ребер мінімального каркаса
 
-    for (Edge& e : edges) {
+	for (Edge& e : edges) { // проходимо по відсортованих ребрах
+
         // якщо кінці ребра в різних компонентах — додаємо до каркасу
         if (dsu.set_find(e.u) != dsu.set_find(e.v)) {
-            mst.push_back(e);
-            dsu.set_union(e.u, e.v);
-            if ((int)mst.size() == n - 1)
-                break; // каркас з n-1 ребер — готово
+			mst.push_back(e); // додаємо ребро до мінімального каркаса
+			dsu.set_union(e.u, e.v); // об'єднуємо компоненти, до яких належать кінці ребра
+			if ((int)mst.size() == n - 1) // якщо в каркасі вже n-1 ребер, то він готовий
+                break; 
+
         }
     }
-    return mst;
+    return mst; 
 }
 
 int main() {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
-    int n = 9; // кількість вершин
+    int n = 9; 
 
     vector<Edge> edges = {
      {0, 1,  4}, {0, 7,  8},
