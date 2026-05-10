@@ -4,9 +4,11 @@
 class DSU {
 private:
     std::vector<int> parent;
+	std::vector<int> rank_; 
 
 public:
     DSU(int n);
-    int find(int v);
-    void unite(int a, int b);
+    void set_make(int v);
+    int  set_find(int v);
+    void set_union(int v1, int v2);
 };

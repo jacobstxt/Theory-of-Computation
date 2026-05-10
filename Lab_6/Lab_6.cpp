@@ -1,7 +1,7 @@
 ﻿#include <iostream>
-#include <locale>
 #include <vector>
 #include <algorithm>
+#include <windows.h>
 #include "DSU.h"
 
 using namespace std;
@@ -10,43 +10,67 @@ struct Edge {
     int u, v, weight;
 };
 
-// сортування
-bool cmp(Edge a, Edge b) {
-    return a.weight < b.weight;
+void sort(vector<Edge>& edges) {
+    int n = (int)edges.size();
+    for (int i = 1; i < n; i++) {
+        Edge key = edges[i];
+        int j = i - 1;
+        while (j >= 0 && edges[j].weight > key.weight) {
+            edges[j + 1] = edges[j];
+            j--;
+        }
+        edges[j + 1] = key;
+    }
+}
+
+vector<Edge> kruskal(int n, vector<Edge>& edges) {
+    sort(edges); // сортуємо ребра за вагою
+
+    DSU dsu(n);
+    vector<Edge> mst;
+
+    for (Edge& e : edges) {
+        // якщо кінці ребра в різних компонентах — додаємо до каркасу
+        if (dsu.set_find(e.u) != dsu.set_find(e.v)) {
+            mst.push_back(e);
+            dsu.set_union(e.u, e.v);
+            if ((int)mst.size() == n - 1)
+                break; // каркас з n-1 ребер — готово
+        }
+    }
+    return mst;
 }
 
 int main() {
-    setlocale(LC_ALL, "Ukrainian");
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+
     int n = 9; // кількість вершин
 
     vector<Edge> edges = {
-        {0,1,4}, {0,7,8}, {1,2,8}, {1,7,11},
-        {2,3,7}, {2,8,2}, {2,5,4}, {3,4,9},
-        {3,5,14}, {4,5,10}, {5,6,2}, {6,7,1},
-        {6,8,6}, {7,8,7}
+     {0, 1,  4}, {0, 7,  8},
+     {1, 2,  8}, {1, 7, 11},
+     {2, 3,  7}, {2, 8,  2},
+     {2, 5,  4}, {3, 4,  9},
+     {3, 5, 14}, {4, 5, 10},
+     {5, 6,  2}, {6, 7,  1}, 
+     {6, 8,  6}, {7, 8,  7}
     };
 
-    sort(edges.begin(), edges.end(), cmp);
+    vector<Edge> mst = kruskal(n, edges);
 
-    DSU dsu(n);
 
-    vector<Edge> mst; // мінімальний каркас
+    cout << "Мiнiмальний каркас (алгоритм Краскала):\n";
+    cout << "-------------------------------------------\n";
     int totalWeight = 0;
-
-    for (Edge e : edges) {
-        if (dsu.find(e.u) != dsu.find(e.v)) {
-            mst.push_back(e);
-            totalWeight += e.weight;
-            dsu.unite(e.u, e.v);
-        }
+    for (auto& e : mst) {
+        cout << "  " << e.u << " -- " << e.v
+            << "   вага: " << e.weight << "\n";
+        totalWeight += e.weight;
     }
-
-    cout << "Мiнiмальний каркас:\n";
-    for (auto e : mst) {
-        cout << e.u << " - " << e.v << " : " << e.weight << endl;
-    }
-
-    cout << "Сума ваг = " << totalWeight << endl;
+    cout << "-------------------------------------------\n";
+    cout << "Загальна вага: " << totalWeight << "\n";
+   
 
     return 0;
 }
