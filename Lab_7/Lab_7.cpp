@@ -68,7 +68,8 @@ int main()
 
         switch (choice) {
 
-            // ── Вставка ─────────────────────────────────────────────
+
+
         case 1: {
             int key;
             std::cout << "Введіть ключ: ";
@@ -79,19 +80,21 @@ int main()
             break;
         }
 
-              // ── Пошук ───────────────────────────────────────────────
         case 2: {
             int key;
             std::cout << "Введіть ключ для пошуку: ";
             std::cin >> key;
             bool found = ChainedHashSearch(table, key, currentHash);
-            std::cout << "Ключ " << key
-                << (found ? " ЗНАЙДЕНО" : " НЕ ЗНАЙДЕНО")
-                << " (слот " << currentHash(key, m) << ")\n";
+            if (found) {
+                std::cout << "Ключ " << key
+                    << " ЗНАЙДЕНО (слот " << currentHash(key, m) << ")\n";
+            }
+            else {
+                std::cout << "Ключ " << key << " НЕ ЗНАЙДЕНО\n";
+            }
             break;
         }
 
-              // ── Видалення ───────────────────────────────────────────
         case 3: {
             int key;
             std::cout << "Введіть ключ для видалення: ";
@@ -100,12 +103,11 @@ int main()
             break;
         }
 
-              // ── Відображення ────────────────────────────────────────
         case 4:
             ChainedHashShow(table);
             break;
 
-            // ── Вибір хеш-функції ────────────────────────────────────
+
         case 5: {
             int hChoice;
             printHashMenu();

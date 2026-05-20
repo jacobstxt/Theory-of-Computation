@@ -16,23 +16,22 @@ int hashMultiplication(int key, int m)
 {
     const double A = 0.6180339887;
     double frac = (key * A) - std::floor(key * A);
-    return static_cast<int>(std::floor(m * frac));
+    return static_cast<int>(std::floor(m * frac)); 
 }
 
 
 HashTable createHashTable(int m)
 {
-    return HashTable(m);   // m порожніх списків
+    return HashTable(m);  
 }
 
 
-void ChainedHashInsert(HashTable& table, int key,
-    int (*hashFunc)(int, int))
+void ChainedHashInsert(HashTable& table, int key, int (*hashFunc)(int, int))
 {
-    int m = static_cast<int>(table.size());
-    int idx = hashFunc(key, m);
+	int m = static_cast<int>(table.size());  // розмір таблиці
+	int idx = hashFunc(key, m); // обчислення індексу за допомогою хеш-функції
+	auto& chain = table[idx]; // беремо список елементів у цій комірці
     // Якщо ключ вже є — не дублюємо
-    auto& chain = table[idx];
     if (std::find(chain.begin(), chain.end(), key) != chain.end()) {
         std::cout << "Key " << key << " already exists in the table.\n";
         return;
@@ -41,23 +40,23 @@ void ChainedHashInsert(HashTable& table, int key,
 }
 
 
-bool ChainedHashSearch(const HashTable& table, int key,
-    int (*hashFunc)(int, int))
+bool ChainedHashSearch(const HashTable& table, int key, int (*hashFunc)(int, int))
 {
     int m = static_cast<int>(table.size());
     int idx = hashFunc(key, m);
     const auto& chain = table[idx];
+
     return std::find(chain.begin(), chain.end(), key) != chain.end();
 }
 
 
 
-void ChainedHashDelete(HashTable& table, int key,
-    int (*hashFunc)(int, int))
+void ChainedHashDelete(HashTable& table, int key, int (*hashFunc)(int, int))
 {
     int m = static_cast<int>(table.size());
     int idx = hashFunc(key, m);
     auto& chain = table[idx];
+
     auto it = std::find(chain.begin(), chain.end(), key);
     if (it != chain.end()) {
         chain.erase(it);
