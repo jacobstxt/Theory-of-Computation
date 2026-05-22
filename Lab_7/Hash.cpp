@@ -17,13 +17,14 @@ int hashMultiplication(int key, int m)
     const double A = 0.6180339887;
     double frac = (key * A) - std::floor(key * A);
     return static_cast<int>(std::floor(m * frac)); 
-}
+}        
 
 
 HashTable createHashTable(int m)
 {
     return HashTable(m);  
 }
+
 
 
 void ChainedHashInsert(HashTable& table, int key, int (*hashFunc)(int, int))
